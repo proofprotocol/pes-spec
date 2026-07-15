@@ -45,11 +45,11 @@ This document is a published specification of the Proof Protocol™. It is relea
 
 ## 1. Motivation
 
-Security scores are everywhere. Detection rates, containment percentages, block rates, efficacy claims — vendors publish these numbers constantly. Buyers have no way to verify them.
+Security scores are everywhere. Detection rates, containment percentages, block rates, efficacy claims - vendors publish these numbers constantly. Buyers have no way to verify them.
 
 The problem is structural. A score without a declared denominator is not a metric. A detection rate without a definition of what counts as detected is not measurable. A containment percentage that excludes inconvenient cases from the denominator without declaring the exclusion is not honest.
 
-PES exists to define what a valid efficacy score looks like — one that is formula-bound, denominator-declared, case-classified, and anchored to a tamper-evident proof chain. A PES score is not a claim. It is a calculation over a declared set of classified execution events, verifiable by anyone with access to the proof chain.
+PES exists to define what a valid efficacy score looks like - one that is formula-bound, denominator-declared, case-classified, and anchored to a tamper-evident proof chain. A PES score is not a claim. It is a calculation over a declared set of classified execution events, verifiable by anyone with access to the proof chain.
 
 ---
 
@@ -239,7 +239,7 @@ A score calculated after execution from reconstructed case records is not a vali
 
 ### 6.5 A Score With Undeclared Exclusions
 
-If cases were excluded from the denominator for any reason other than IRRELEVANT classification pre-declared in the proof run scope, the score is invalid. Silent exclusion of inconvenient cases is not scope management — it is score manipulation.
+If cases were excluded from the denominator for any reason other than IRRELEVANT classification pre-declared in the proof run scope, the score is invalid. Silent exclusion of inconvenient cases is not scope management - it is score manipulation.
 
 ---
 
@@ -388,7 +388,7 @@ This document has no IANA considerations.
 
 ## 13. References
 
-- RFC 2119 — Key words for use in RFCs: https://www.rfc-editor.org/rfc/rfc2119
+- RFC 2119 - Key words for use in RFCs: https://www.rfc-editor.org/rfc/rfc2119
 - Proof Protocol™ Specification (PP-SPEC-001): https://github.com/proofprotocol
 - Proof Validity Specification (PP-SPEC-002): https://github.com/proofprotocol
 - MITRE ATT&CK Framework: https://attack.mitre.org
