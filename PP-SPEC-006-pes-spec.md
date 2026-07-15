@@ -4,7 +4,7 @@
 **Version:** 1.0  
 **Status:** Published  
 **License:** CC BY 4.0  
-**Maintained by:** Proof Economy Standards Alliance (PESA)  
+**Maintained by:** Proof Economy™ Standards Alliance (PESA)  
 **Repository:** https://github.com/proofprotocol  
 **Published:** 2026-07-12  
 
@@ -12,15 +12,15 @@
 
 ## Abstract
 
-This specification defines the Proof of Efficacy Score (PES): the numeric metric expressing the containment performance of a security tool or autonomous agent as measured under the Proof Protocol. It defines the formula, the case classification taxonomy, the denominator logic, and the requirements for a PES score to be considered a valid proof metric rather than a marketing number.
+This specification defines the Proof of Efficacy Score (PES): the numeric metric expressing the containment performance of a security tool or autonomous agent as measured under the Proof Protocol™. It defines the formula, the case classification taxonomy, the denominator logic, and the requirements for a PES score to be considered a valid proof metric rather than a marketing number.
 
-PES is the quantitative layer of the Proof Economy. It answers the question: of all the adversarial actions that could have been contained, how many were?
+PES is the quantitative layer of the Proof Economy™. It answers the question: of all the adversarial actions that could have been contained, how many were?
 
 ---
 
 ## Status of This Document
 
-This document is a published specification of the Proof Protocol. It is released under the Creative Commons Attribution 4.0 International License (CC BY 4.0). You are free to share, implement, and build on it for any purpose including commercially, provided attribution is given to Nebulonium, Inc. / HACKERverse and the Proof Economy Standards Alliance (PESA).
+This document is a published specification of the Proof Protocol™. It is released under the Creative Commons Attribution 4.0 International License (CC BY 4.0). You are free to share, implement, and build on it for any purpose including commercially, provided attribution is given to Nebulonium, Inc. / HACKERverse and the Proof Economy™ Standards Alliance (PESA).
 
 ---
 
@@ -36,7 +36,7 @@ This document is a published specification of the Proof Protocol. It is released
 8. [PES in Proof Records](#8-pes-in-proof-records)
 9. [Reference Implementation](#9-reference-implementation)
 10. [Conformance](#10-conformance)
-11. [Relationship to Other Proof Protocol Specifications](#11-relationship-to-other-proof-protocol-specifications)
+11. [Relationship to Other Proof Protocol™ Specifications](#11-relationship-to-other-proof-protocol-specifications)
 12. [IANA Considerations](#12-iana-considerations)
 13. [References](#13-references)
 14. [Authors](#14-authors)
@@ -73,9 +73,9 @@ The key words **MUST**, **MUST NOT**, **REQUIRED**, **SHALL**, **SHALL NOT**, **
 
 **System Under Test (SUT):** The security tool, platform, or agent whose efficacy is being scored.
 
-**Proof Run:** A complete execution of test cases against a SUT under the Proof Protocol, producing a proof chain with classified case records.
+**Proof Run:** A complete execution of test cases against a SUT under the Proof Protocol™, producing a proof chain with classified case records.
 
-**ProofRegister:** The append-only public registry where completed proof bundles including PES scores are anchored.
+**ProofRegister™:** The append-only public registry where completed proof bundles including PES scores are anchored.
 
 ---
 
@@ -210,7 +210,7 @@ A PES score MUST be accompanied by the following declared values:
   "missed_count": "<integer>",
   "observed_count": "<integer>",
   "irrelevant_count": "<integer>",
-  "proof_chain_reference": "<ProofRegister campaign ID>",
+  "proof_chain_reference": "<ProofRegister™ campaign ID>",
   "pes_calculated_utc": "<ISO 8601>"
 }
 ```
@@ -329,7 +329,7 @@ A proof chain MUST include a PES Summary Record as its penultimate record before
 
 ## 9. Reference Implementation
 
-The first PES score computed under this specification was produced during the certification run of Pipelock v3.0.0 by Josh Waldrep, an agentic egress firewall, conducted under the Proof Protocol and anchored to ProofRegister.
+The first PES score computed under this specification was produced during the certification run of Pipelock v3.0.0 by Josh Waldrep, an agentic egress firewall, conducted under the Proof Protocol™ and anchored to ProofRegister™.
 
 | Field | Value |
 |-------|-------|
@@ -346,7 +346,7 @@ The first PES score computed under this specification was produced during the ce
 | **PES Score** | **99.4%** |
 | Detection Rate | 99.4% |
 | Child TTP Records | 117 |
-| Certification | ProofStamp |
+| Certification | ProofStamp™ |
 
 Query the registry: [proofregister.com](https://proofregister.com)
 
@@ -367,16 +367,16 @@ An implementation conforms to this specification if:
 
 ---
 
-## 11. Relationship to Other Proof Protocol Specifications
+## 11. Relationship to Other Proof Protocol™ Specifications
 
 | Document | Relationship |
 |----------|-------------|
-| Proof Protocol Specification (PP-SPEC-001) | Core protocol. PES Summary Record is a chain record type under PP-SPEC-001. |
+| Proof Protocol™ Specification (PP-SPEC-001) | Core protocol. PES Summary Record is a chain record type under PP-SPEC-001. |
 | Proof Validity Specification (PP-SPEC-002) | A score without denominator declaration fails PP-SPEC-002 Section 4.7. PES is the valid metric PP-SPEC-002 requires. |
-| ProofBundle Format Specification (PP-SPEC-003) | PES Summary Record and case classification records are carried in the ProofBundle. |
-| ProofRegister API Specification (PP-SPEC-004) | PES scores are queryable via the ProofRegister API by campaign ID. |
-| Agent-to-Agent Proof Protocol (PP-SPEC-007) | PES scores computed during agentic proof runs follow this specification. OBSERVED classification is particularly relevant for agentic detection-without-containment outcomes. |
-| ProofStamp Certification Criteria (PP-SPEC-009) | ProofStamp certification requires a minimum PES threshold as defined in PP-SPEC-009. |
+| ProofBundle™ Format Specification (PP-SPEC-003) | PES Summary Record and case classification records are carried in the ProofBundle™. |
+| ProofRegister™ API Specification (PP-SPEC-004) | PES scores are queryable via the ProofRegister™ API by campaign ID. |
+| Agent-to-Agent Proof Protocol™ (PP-SPEC-007) | PES scores computed during agentic proof runs follow this specification. OBSERVED classification is particularly relevant for agentic detection-without-containment outcomes. |
+| ProofStamp™ Certification Criteria (PP-SPEC-009) | ProofStamp™ certification requires a minimum PES threshold as defined in PP-SPEC-009. |
 
 ---
 
@@ -389,7 +389,7 @@ This document has no IANA considerations.
 ## 13. References
 
 - RFC 2119 — Key words for use in RFCs: https://www.rfc-editor.org/rfc/rfc2119
-- Proof Protocol Specification (PP-SPEC-001): https://github.com/proofprotocol
+- Proof Protocol™ Specification (PP-SPEC-001): https://github.com/proofprotocol
 - Proof Validity Specification (PP-SPEC-002): https://github.com/proofprotocol
 - MITRE ATT&CK Framework: https://attack.mitre.org
 - Creative Commons CC BY 4.0: https://creativecommons.org/licenses/by/4.0/
@@ -398,7 +398,7 @@ This document has no IANA considerations.
 
 ## 14. Authors
 
-Proof Economy Standards Alliance (PESA)  
+Proof Economy™ Standards Alliance (PESA)  
 https://proofeconomy.foundation  
 contact@proofeconomy.foundation  
 
@@ -407,4 +407,4 @@ contact@proofeconomy.foundation
 ---
 
 *Copyright 2026 Nebulonium, Inc. dba HACKERverse. Licensed under CC BY 4.0.*  
-*ProofStamp is a certification mark of Nebulonium, Inc.*
+*ProofStamp™ is a certification mark of Nebulonium, Inc.*
