@@ -374,7 +374,7 @@ An implementation conforms to this specification if:
 | Proof Protocol Specification (PP-SPEC-001) | Core protocol. PES Summary Record is a chain record type under PP-SPEC-001. |
 | Proof Validity Specification (PP-SPEC-002) | A score without denominator declaration fails PP-SPEC-002 Section 4.7. PES is the valid metric PP-SPEC-002 requires. |
 | ProofBundle Format Specification (PP-SPEC-003) | PES Summary Record and case classification records are carried in the ProofBundle. |
-| ProofRegistry API Specification (PP-SPEC-004) | PES scores are queryable via the ProofRegistry API by campaign ID. |
+| ProofRegister API Specification (PP-SPEC-004) | PES scores are queryable via the ProofRegister API by campaign ID. |
 | Agent-to-Agent Proof Protocol (PP-SPEC-007) | PES scores computed during agentic proof runs follow this specification. OBSERVED classification is particularly relevant for agentic detection-without-containment outcomes. |
 | ProofStamp Certification Criteria (PP-SPEC-009) | ProofStamp certification requires a minimum PES threshold as defined in PP-SPEC-009. |
 
