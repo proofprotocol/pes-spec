@@ -59,19 +59,23 @@ PES exists to define what a valid efficacy score looks like - one that is formul
 
 The key words **MUST**, **MUST NOT**, **REQUIRED**, **SHALL**, **SHALL NOT**, **SHOULD**, **SHOULD NOT**, **RECOMMENDED**, **MAY**, and **OPTIONAL** in this document are to be interpreted as described in RFC 2119.
 
-**Proof of Efficacy Score (PES):** The numeric score expressing containment performance, defined as `Blocked / (Blocked + Missed) × 100`.
+**Proof of Efficacy Score (PES):** A pair of scores expressing containment and detection performance. Both MUST be published together. Neither may be published alone.
+
+**Containment Score:** `BLOCKED / (BLOCKED + OBSERVED + MISSED) × 100`. The proportion of in-scope adversarial cases whose effect the SUT prevented.
+
+**Detection Score:** `DETECTED / (BLOCKED + OBSERVED + MISSED) × 100`, where DETECTED is the count of in-scope cases with `detected: true`. The proportion of in-scope adversarial cases the SUT identified, whether or not it contained them.
 
 **Case:** A single adversarial action, TTP execution, or test event presented to the System Under Test during a proof run.
 
 **Classification:** The disposition assigned to a case following execution. One of: BLOCKED, MISSED, OBSERVED, IRRELEVANT. Defined in Section 3.
 
-**Applicable Case:** A case classified as BLOCKED or MISSED. These are the only cases that enter the PES denominator.
+**In-Scope Case:** A case classified as BLOCKED, MISSED, or OBSERVED. These cases enter the denominator of both scores.
 
-**Non-Applicable Case:** A case classified as OBSERVED or IRRELEVANT. These cases are explicitly excluded from the PES denominator.
+**Out-of-Scope Case:** A case classified as IRRELEVANT. The only classification excluded from the denominator, and only where the exclusion was pre-declared.
 
-**Denominator:** The sum of BLOCKED and MISSED cases. The total population of applicable cases against which containment is measured.
+**Denominator:** The sum of BLOCKED, MISSED, and OBSERVED cases. Identical for both scores.
 
-**Numerator:** The count of BLOCKED cases.
+**Detected:** A boolean recorded per case. True for BLOCKED and OBSERVED by definition. Either value for MISSED. Omitted for IRRELEVANT.
 
 **System Under Test (SUT):** The security tool, platform, or agent whose efficacy is being scored.
 
@@ -142,11 +146,11 @@ Was the case within declared scope?
 ├── NO → IRRELEVANT (only if scope exclusion was pre-declared)
 └── YES → Did the SUT take a containment action?
            ├── YES → Did containment prevent the adversarial effect?
-           │          ├── YES → BLOCKED
-           │          └── NO  → MISSED
+           │          ├── YES → BLOCKED         (detected: true)
+           │          └── NO  → MISSED          (detected: true)
            └── NO  → Did the SUT produce any detection signal?
-                      ├── YES → OBSERVED
-                      └── NO  → MISSED
+                      ├── YES → OBSERVED        (detected: true)
+                      └── NO  → MISSED          (detected: false)
 ```
 
 ---
@@ -154,35 +158,43 @@ Was the case within declared scope?
 ## 4. The PES Formula
 
 ```
-PES = (Blocked / (Blocked + Missed)) × 100
+Denominator = BLOCKED + OBSERVED + MISSED
+
+Containment = (BLOCKED / Denominator) × 100
+Detection   = (DETECTED / Denominator) × 100
 ```
 
-PES is expressed as a percentage rounded to one decimal place.
+Where DETECTED is the count of in-scope cases with `detected: true`.
+
+Both scores are expressed as percentages rounded to one decimal place.
+
+IRRELEVANT cases are excluded from the denominator. No other classification may be excluded.
+
+Both scores MUST be published together with the full classification breakdown and the detected count.
 
 **Example:**
 
-| Classification | Count |
-|----------------|-------|
-| BLOCKED | 163 |
-| MISSED | 1 |
-| OBSERVED | 12 |
-| IRRELEVANT | 3 |
-| **Total Cases** | **179** |
+| Classification | Count | Detected |
+|----------------|-------|----------|
+| BLOCKED | 120 | 120 |
+| OBSERVED | 42 | 42 |
+| MISSED | 2 | 0 |
+| IRRELEVANT | 3 | n/a |
+| **Total Cases** | **167** | |
 
 ```
-Applicable Cases = BLOCKED + MISSED = 163 + 1 = 164
-PES = (163 / 164) × 100 = 99.4%
+Denominator = 120 + 42 + 2 = 164
+Containment = (120 / 164) × 100 = 73.2%
+Detection   = (162 / 164) × 100 = 98.8%
 ```
 
-OBSERVED (12) and IRRELEVANT (3) do not enter the calculation.
+IRRELEVANT (3) does not enter either calculation.
 
 ### 4.1 Edge Cases
 
-**Zero applicable cases:** If a proof run produces zero BLOCKED and zero MISSED cases, PES is undefined. This result MUST be reported as PES: N/A with a declaration that no applicable cases were recorded. A PES of 100% MUST NOT be reported for a run with zero applicable cases.
+**Zero in-scope cases:** If a run produces zero BLOCKED, zero OBSERVED, and zero MISSED cases, both scores are undefined and MUST be reported as N/A with a declaration that no in-scope cases were recorded. Scores of 100% MUST NOT be reported for a run with zero in-scope cases.
 
-**All cases BLOCKED:** PES = 100.0%. This result is valid but SHOULD trigger anomaly documentation. See PP-SPEC-002 Section 4.8.
-
-**All cases MISSED:** PES = 0.0%. This result is valid and MUST be reported without modification.
+**Containment above detection:** Structurally impossible. Every BLOCKED case is detected by definition, so Containment can never exceed Detection. A published pair where it does indicates a classification error and the run MUST be rejected.
 
 ---
 
@@ -190,9 +202,13 @@ OBSERVED (12) and IRRELEVANT (3) do not enter the calculation.
 
 The denominator is `Blocked + Missed`. This is the total count of cases where the SUT had both the opportunity and the declared responsibility to act.
 
-### 5.1 Why OBSERVED Is Excluded
+### 5.1 Why OBSERVED Enters the Denominator
 
-OBSERVED cases represent a third outcome: the SUT saw the action but did not stop it. Including OBSERVED in the denominator would conflate detection with containment and allow vendors to inflate PES by generating alerts rather than blocks. The PES formula measures one thing: of the cases the SUT was responsible for containing, how many did it contain?
+An OBSERVED case is one the SUT saw and did not stop. The adversarial effect succeeded.
+
+Earlier versions of this specification excluded OBSERVED from the denominator on the reasoning that including it would let vendors inflate scores by alerting rather than blocking. That reasoning was inverted. Excluding OBSERVED is what rewards alerting over blocking: a case the SUT declines to contain disappears from the measurement entirely, so a product that detects everything and stops nothing scores identically to one that stops everything.
+
+OBSERVED is a containment failure and enters the containment denominator. It is a detection success and enters the detection numerator. The two-score model records both facts without either concealing the other.
 
 ### 5.2 Why IRRELEVANT Is Excluded
 
@@ -283,7 +299,9 @@ Supplementary metrics MUST be clearly labeled and MUST NOT be presented in a way
 
 ### 8.1 Case Record Classification Field
 
-Every proof chain case record MUST include a `classification` field set to one of: `BLOCKED`, `MISSED`, `OBSERVED`, `IRRELEVANT`.
+Every proof chain case record MUST include a `classification` field set to one of: `BLOCKED`, `MISSED`, `OBSERVED`, `IRRELEVANT`, and a `detected` boolean.
+
+`detected` MUST be true for BLOCKED and OBSERVED. It MAY be either value for MISSED. It is omitted for IRRELEVANT.
 
 ```json
 {
@@ -291,9 +309,10 @@ Every proof chain case record MUST include a `classification` field set to one o
   "record_type": "TTP_EXECUTION",
   "ttp_id": "<TTP identifier>",
   "classification": "BLOCKED | MISSED | OBSERVED | IRRELEVANT",
+  "detected": true,
   "classification_rationale": "<brief explanation>",
-  "containment_action": "<description if BLOCKED>",
-  "detection_signal": "<description if OBSERVED>",
+  "containment_action": "<description if BLOCKED or MISSED>",
+  "detection_signal": "<description if detected is true>",
   "irrelevant_scope_reference": "<pre-declared scope exclusion if IRRELEVANT>",
   "content_hash": "<SHA-256>",
   "previous_record_hash": "<SHA-256>",
@@ -339,14 +358,15 @@ The first PES score computed under this specification was produced during the ce
 | Campaign ID | PR-2026-00028 |
 | Anchor Block | Block 29 |
 | NIST Beacon Pulse | 1852788 |
-| Total Cases | 165 |
-| Applicable Cases | 164 |
-| BLOCKED | 163 |
-| MISSED | 1 |
-| OBSERVED | 0 |
-| IRRELEVANT | 1 |
-| **PES Score** | **99.4%** |
-| Detection Rate | 99.4% |
+| Total Cases | 167 |
+| In-Scope Cases | 164 |
+| BLOCKED | 120 |
+| OBSERVED | 42 |
+| MISSED | 2 |
+| IRRELEVANT | 3 |
+| Detected | 162 |
+| **Containment Score** | **73.2%** |
+| **Detection Score** | **98.8%** |
 | Child TTP Records | 117 |
 | Certification | ProofStamp™ |
 
@@ -359,12 +379,14 @@ Query the registry: [proofregister.com](https://proofregister.com)
 An implementation conforms to this specification if:
 
 1. It classifies every case as exactly one of BLOCKED, MISSED, OBSERVED, or IRRELEVANT
-2. It applies the PES formula as defined in Section 4 without modification
-3. It excludes OBSERVED and IRRELEVANT cases from the PES denominator
-4. It does not reclassify cases after execution
-5. It declares the full case count breakdown alongside every published PES score
-6. It records classification in the proof chain at the time of case execution
-7. It includes a PES Summary Record in every proof chain
+2. It records a `detected` boolean for every in-scope case
+3. It applies both formulas as defined in Section 4 without modification
+4. It excludes only IRRELEVANT cases from the denominator
+5. It publishes the Containment Score and the Detection Score together, never one alone
+6. It does not reclassify cases after execution
+7. It declares the full case count breakdown and detected count alongside every published score
+8. It records classification and detection in the proof chain at the time of case execution
+9. It includes a PES Summary Record in every proof chain
 8. It does not present Detection Rate or any other supplementary metric as PES
 
 ---
