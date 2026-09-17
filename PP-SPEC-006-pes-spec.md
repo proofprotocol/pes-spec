@@ -1,12 +1,14 @@
+> **Zenodo DOI:** [10.5281/zenodo.21379780](https://doi.org/10.5281/zenodo.21379780) — Published 2026-07-15
+
 # Proof of Efficacy Score (PES) Specification
 
-**Document ID:** PP-SPEC-006  
-**Version:** 1.0  
-**Status:** Published  
-**License:** CC BY 4.0  
-**Maintained by:** Proof Economy™ Standards Alliance (PESA)  
-**Repository:** https://github.com/proofprotocol  
-**Published:** 2026-07-12  
+**Document ID:** PP-SPEC-006
+**Version:** 1.0
+**Status:** Published
+**License:** CC BY 4.0
+**Maintained by:** Proof Economy™ Standards Alliance (PESA)
+**Repository:** <https://github.com/proofprotocol>
+**Published:** 2026-07-12
 
 ---
 
@@ -92,12 +94,13 @@ Every case in a proof run MUST be assigned exactly one classification. Classific
 The SUT detected and contained the adversarial action. The action did not achieve its intended effect.
 
 **Criteria:**
+
 - The SUT identified the action as adversarial
 - The SUT took a containment action (block, quarantine, terminate, reject, or equivalent)
 - The containment action prevented the adversarial effect from materializing
 - All three criteria must be met for a BLOCKED classification
 
-**Enters PES denominator:** Yes  
+**Enters PES denominator:** Yes
 **Enters PES numerator:** Yes
 
 ### 3.2 MISSED
@@ -105,11 +108,12 @@ The SUT detected and contained the adversarial action. The action did not achiev
 The adversarial action was presented to the SUT and was not contained. The action achieved its intended effect, in whole or in part.
 
 **Criteria:**
+
 - The action was presented to the SUT within declared scope
 - The SUT did not take a containment action, OR the containment action was insufficient to prevent the adversarial effect
 - Either criterion is sufficient for a MISSED classification
 
-**Enters PES denominator:** Yes  
+**Enters PES denominator:** Yes
 **Enters PES numerator:** No
 
 ### 3.3 OBSERVED
@@ -120,7 +124,7 @@ The adversarial action was presented to the SUT and was detected or logged but n
 
 **Note:** OBSERVED cases SHOULD be reported as a supplementary metric (Detection Rate). See Section 7.
 
-**Enters PES denominator:** No  
+**Enters PES denominator:** No
 **Enters PES numerator:** No
 
 ### 3.4 IRRELEVANT
@@ -128,13 +132,14 @@ The adversarial action was presented to the SUT and was detected or logged but n
 The case was not applicable to the SUT in its declared configuration or scope. The case was presented but the SUT had no declared capability or responsibility to act on it.
 
 **Criteria:**
+
 - The case falls outside the declared scope of the proof run, OR
 - The SUT's declared capability set explicitly excludes this case type, AND
 - The exclusion was declared in the proof run parameters before execution began
 
 **Important:** IRRELEVANT classification requires pre-execution scope declaration. A case cannot be reclassified as IRRELEVANT after execution because the result was inconvenient. Post-hoc IRRELEVANT assignments are classification fraud.
 
-**Enters PES denominator:** No  
+**Enters PES denominator:** No
 **Enters PES numerator:** No
 
 ### 3.5 Classification Decision Tree
@@ -172,21 +177,21 @@ Both scores MUST be published together with the full classification breakdown an
 
 **Example:**
 
-| Classification | Count | Detected |
-|----------------|-------|----------|
-| BLOCKED | 120 | 120 |
-| OBSERVED | 42 | 42 |
-| MISSED | 2 | 0 |
-| IRRELEVANT | 3 | n/a |
-| **Total Cases** | **167** | |
+| Classification  | Count   | Detected |
+| ---------------- | ------- | -------- |
+| BLOCKED         | 120     | 120      |
+| OBSERVED        | 44      | 44       |
+| MISSED          | 0       | 0        |
+| IRRELEVANT      | 0       | n/a      |
+| **Total Cases** | **164** |          |
 
 ```
-Denominator = 120 + 42 + 2 = 164
+Denominator = 120 + 44 + 0 = 164
 Containment = (120 / 164) × 100 = 73.2%
-Detection   = (162 / 164) × 100 = 98.8%
+Detection   = (164 / 164) × 100 = 100.0%
 ```
 
-IRRELEVANT (3) does not enter either calculation.
+IRRELEVANT (0) does not enter either calculation.
 
 ### 4.1 Edge Cases
 
@@ -216,7 +221,7 @@ IRRELEVANT cases were outside the declared scope. Including them would allow ven
 
 A PES score MUST be accompanied by the following declared values:
 
-```json
+```
 {
   "pes_score": "<percentage to one decimal place>",
   "pes_numerator": "<count of BLOCKED cases>",
@@ -301,7 +306,7 @@ Every proof chain case record MUST include a `classification` field set to one o
 
 `detected` MUST be true for BLOCKED and OBSERVED. It MAY be either value for MISSED. It is omitted for IRRELEVANT.
 
-```json
+```
 {
   "record_id": "<integer>",
   "record_type": "TTP_EXECUTION",
@@ -323,7 +328,7 @@ Every proof chain case record MUST include a `classification` field set to one o
 
 A proof chain MUST include a PES Summary Record as its penultimate record before the final anchor record.
 
-```json
+```
 {
   "record_type": "PES_SUMMARY",
   "pes_score": "<percentage>",
@@ -350,23 +355,21 @@ A proof chain MUST include a PES Summary Record as its penultimate record before
 
 The first PES score computed under this specification was produced during the certification run of Pipelock v3.0.0 by Josh Waldrep, an agentic egress firewall, conducted under the Proof Protocol™ and anchored to ProofRegister™.
 
-| Field | Value |
-|-------|-------|
-| Product | Pipelock v3.0.0 |
-| Campaign ID | PR-2026-00028 |
-| Anchor Block | Block 29 |
-| NIST Beacon Pulse | 1852788 |
-| Total Cases | 167 |
-| In-Scope Cases | 164 |
-| BLOCKED | 120 |
-| OBSERVED | 42 |
-| MISSED | 2 |
-| IRRELEVANT | 3 |
-| Detected | 162 |
-| **Containment Score** | **73.2%** |
-| **Detection Score** | **98.8%** |
-| Child TTP Records | 117 |
-| Certification | ProofStamp™ |
+| Field                 | Value           |
+| --------------------- | --------------- |
+| Product               | Pipelock v3.0.0 |
+| Campaign ID           | PR-2026-08338   |
+| Anchor Block          | Block 8339      |
+| Total Cases           | 164             |
+| In-Scope Cases        | 164             |
+| BLOCKED               | 120             |
+| OBSERVED              | 44              |
+| MISSED                | 0               |
+| IRRELEVANT            | 0               |
+| Detected              | 164             |
+| **Containment Score** | **73.2%**       |
+| **Detection Score**   | **100.0%**      |
+| Certification         | ProofStamp™     |
 
 Query the registry: [proofregister.com](https://proofregister.com)
 
@@ -385,20 +388,20 @@ An implementation conforms to this specification if:
 7. It declares the full case count breakdown and detected count alongside every published score
 8. It records classification and detection in the proof chain at the time of case execution
 9. It includes a PES Summary Record in every proof chain
-8. It does not present Detection Rate or any other supplementary metric as PES
+10. It does not present Detection Rate or any other supplementary metric as PES
 
 ---
 
 ## 11. Relationship to Other Proof Protocol™ Specifications
 
-| Document | Relationship |
-|----------|-------------|
-| Proof Protocol™ Specification (PP-SPEC-001) | Core protocol. PES Summary Record is a chain record type under PP-SPEC-001. |
-| Proof Validity Specification (PP-SPEC-002) | A score without denominator declaration fails PP-SPEC-002 Section 4.7. PES is the valid metric PP-SPEC-002 requires. |
-| ProofBundle™ Format Specification (PP-SPEC-003) | PES Summary Record and case classification records are carried in the ProofBundle™. |
-| ProofRegister™ API Specification (PP-SPEC-004) | PES scores are queryable via the ProofRegister™ API by campaign ID. |
-| Agent-to-Agent Proof Protocol™ (PP-SPEC-007) | PES scores computed during agentic proof runs follow this specification. OBSERVED classification is particularly relevant for agentic detection-without-containment outcomes. |
-| ProofStamp™ Certification Criteria (PP-SPEC-009) | ProofStamp™ certification requires a minimum PES threshold as defined in PP-SPEC-009. |
+| Document                                         | Relationship                                                                                                                                                                    |
+| ------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Proof Protocol™ Specification (PP-SPEC-001)      | Core protocol. PES Summary Record is a chain record type under PP-SPEC-001.                                                                                                   |
+| Proof Validity Specification (PP-SPEC-002)       | A score without denominator declaration fails PP-SPEC-002 Section 4.7. PES is the valid metric PP-SPEC-002 requires.                                                          |
+| ProofBundle™ Format Specification (PP-SPEC-003)  | PES Summary Record and case classification records are carried in the ProofBundle™.                                                                                           |
+| ProofRegister™ API Specification (PP-SPEC-004)   | PES scores are queryable via the ProofRegister™ API by campaign ID.                                                                                                           |
+| Agent-to-Agent Proof Protocol™ (PP-SPEC-007)     | PES scores computed during agentic proof runs follow this specification. OBSERVED classification is particularly relevant for agentic detection-without-containment outcomes. |
+| ProofStamp™ Certification Criteria (PP-SPEC-009) | ProofStamp™ certification requires a minimum PES threshold as defined in PP-SPEC-009.                                                                                         |
 
 ---
 
@@ -410,23 +413,23 @@ This document has no IANA considerations.
 
 ## 13. References
 
-- RFC 2119 - Key words for use in RFCs: https://www.rfc-editor.org/rfc/rfc2119
-- Proof Protocol™ Specification (PP-SPEC-001): https://github.com/proofprotocol
-- Proof Validity Specification (PP-SPEC-002): https://github.com/proofprotocol
-- MITRE ATT&CK Framework: https://attack.mitre.org
-- Creative Commons CC BY 4.0: https://creativecommons.org/licenses/by/4.0/
+- RFC 2119 - Key words for use in RFCs: <https://www.rfc-editor.org/rfc/rfc2119>
+- Proof Protocol™ Specification (PP-SPEC-001): <https://github.com/proofprotocol>
+- Proof Validity Specification (PP-SPEC-002): <https://github.com/proofprotocol>
+- MITRE ATT&CK Framework: <https://attack.mitre.org>
+- Creative Commons CC BY 4.0: <https://creativecommons.org/licenses/by/4.0/>
 
 ---
 
 ## 14. Authors
 
-Proof Economy™ Standards Alliance (PESA)  
-https://proofeconomy.foundation  
-contact@proofeconomy.foundation  
+Proof Economy™ Standards Alliance (PESA)
+<https://proofeconomy.foundation>
+<contact@proofeconomy.foundation>
 
 *This specification is maintained by PESA. Governance of this specification follows the PESA practitioner-led model. Vendors may contribute but do not govern.*
 
 ---
 
-*Copyright 2026 Nebulonium, Inc. dba HACKERverse. Licensed under CC BY 4.0.*  
+*Copyright 2026 Nebulonium, Inc. dba HACKERverse. Licensed under CC BY 4.0.*
 *ProofStamp™ is a certification mark of Nebulonium, Inc.*
