@@ -1,0 +1,25 @@
+{
+  "title": "PP-SPEC-006: Proof of Efficacy Score (PES) Specification",
+  "upload_type": "publication",
+  "creators": [
+    {
+      "name": "Ellrod, Craig",
+      "affiliation": "Nebulonium, Inc. (HACKERverse)"
+    }
+  ],
+  "description": "PP-SPEC-006: Proof of Efficacy Score (PES) Specification",
+  "license": "cc-by-4.0",
+  "access_right": "open",
+  "keywords": [
+    "proof-protocol",
+    "proof-of-efficacy"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/proofprotocol/pes-spec",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    }
+  ],
+  "publication_type": "technicalnote"
+}
