@@ -425,6 +425,19 @@ This document has no IANA considerations.
 
 ---
 
+## Extensions
+
+efficacy records MAY use the universal Proof Protocol `extensions` mechanism defined by **PP-SPEC-001**. Extension keys MUST use globally distinguishable namespaces; reverse-domain notation is RECOMMENDED.
+
+Implementations MAY add supplemental metrics and domain measurements. Extensions MUST NOT redefine canonical PES formulas, denominators, case classifications, or the distinction between proof validity and performance.
+
+A conforming implementation MUST be able to ignore an unknown extension and still evaluate this specification's core semantics. Extension-specific validation is supplemental and MUST remain distinguishable from core Proof Protocol conformance.
+
+> **Extensions enrich the object. They do not redefine the protocol.**
+
+---
+
+
 ## 14. Authors
 
 Proof Economy™ Standards Alliance (PESA)  
