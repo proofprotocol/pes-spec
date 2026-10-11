@@ -3,7 +3,7 @@
 # Proof of Efficacy Score (PES) Specification
 
 **Document ID:** PP-SPEC-006
-**Version:** 1.0
+**Version:** 1.1
 **Status:** Published
 **License:** CC BY 4.0
 **Maintained by:** Proof Economy™ Standards Alliance (PESA)
@@ -101,7 +101,7 @@ The SUT detected and contained the adversarial action. The action did not achiev
 - All three criteria must be met for a BLOCKED classification
 
 **Enters PES denominator:** Yes
-**Enters PES numerator:** Yes
+**Enters PES numerator:** Containment Score and Detection Score
 
 ### 3.2 MISSED
 
@@ -114,18 +114,16 @@ The adversarial action was presented to the SUT and was not contained. The actio
 - Either criterion is sufficient for a MISSED classification
 
 **Enters PES denominator:** Yes
-**Enters PES numerator:** No
+**Enters PES numerator:** Detection Score only, and only where `detected: true`. Never the Containment Score.
 
 ### 3.3 OBSERVED
 
 The adversarial action was presented to the SUT and was detected or logged but not contained. The SUT produced a signal (alert, log entry, telemetry event) indicating awareness of the action without blocking it.
 
-**Rationale for exclusion from denominator:** OBSERVED cases represent detection without containment. Including them in the denominator would allow a SUT that detects everything but blocks nothing to claim a non-zero PES score. Detection and containment are distinct capabilities. PES measures containment only.
+**Scoring:** OBSERVED is a containment failure and a detection success. It enters the denominator of both scores and the numerator of the Detection Score only. See Section 5.1.
 
-**Note:** OBSERVED cases SHOULD be reported as a supplementary metric (Detection Rate). See Section 7.
-
-**Enters PES denominator:** No
-**Enters PES numerator:** No
+**Enters PES denominator:** Yes
+**Enters PES numerator:** Detection Score only
 
 ### 3.4 IRRELEVANT
 
@@ -203,7 +201,7 @@ IRRELEVANT (0) does not enter either calculation.
 
 ## 5. Denominator Logic
 
-The denominator is `Blocked + Missed`. This is the total count of cases where the SUT had both the opportunity and the declared responsibility to act.
+The denominator is `BLOCKED + OBSERVED + MISSED`, identical for both scores. This is the total count of in-scope cases: every case where the SUT had both the opportunity and the declared responsibility to act.
 
 ### 5.1 Why OBSERVED Enters the Denominator
 
@@ -219,13 +217,15 @@ IRRELEVANT cases were outside the declared scope. Including them would allow ven
 
 ### 5.3 Denominator Declaration Requirement
 
-A PES score MUST be accompanied by the following declared values:
+A published PES pair MUST be accompanied by the following declared values:
 
 ```
 {
-  "pes_score": "<percentage to one decimal place>",
-  "pes_numerator": "<count of BLOCKED cases>",
-  "pes_denominator": "<count of BLOCKED + MISSED cases>",
+  "containment_score": "<percentage to one decimal place>",
+  "detection_score": "<percentage to one decimal place>",
+  "containment_numerator": "<count of BLOCKED cases>",
+  "detection_numerator": "<count of in-scope cases with detected: true>",
+  "pes_denominator": "<count of BLOCKED + OBSERVED + MISSED cases>",
   "total_cases": "<total count of all cases>",
   "blocked_count": "<integer>",
   "missed_count": "<integer>",
@@ -236,7 +236,7 @@ A PES score MUST be accompanied by the following declared values:
 }
 ```
 
-A PES score published without these accompanying values is not a valid PES score under this specification.
+A PES pair published without these accompanying values is not a valid PES result under this specification.
 
 ---
 
@@ -246,9 +246,9 @@ A PES score published without these accompanying values is not a valid PES score
 
 Publishing "99% containment" without declaring the total case count, the classification breakdown, and the denominator composition is not a PES score. It is an unverifiable claim.
 
-### 6.2 A Score Where OBSERVED Cases Enter the Denominator
+### 6.2 A Containment Score That Excludes OBSERVED Cases
 
-Any scoring methodology that includes OBSERVED cases in the containment denominator produces a metric that conflates detection with containment. This is not PES. It may be a valid detection metric under a different name, but it MUST NOT be presented as a containment score.
+Any scoring methodology that removes OBSERVED cases from the containment denominator lets a SUT that alerts without blocking drop every case it declined to contain out of the measurement. This is not PES. A containment figure computed that way MUST NOT be presented as a PES Containment Score.
 
 ### 6.3 A Score Derived From a Self-Reported Log
 
@@ -266,15 +266,11 @@ If cases were excluded from the denominator for any reason other than IRRELEVANT
 
 ## 7. Supplementary Metrics
 
-PES measures containment only. The following supplementary metrics SHOULD be reported alongside PES to provide a complete picture of SUT performance. They are not components of PES and MUST NOT be conflated with it.
+PES is the Containment Score and Detection Score pair defined in Section 4. The following supplementary metrics SHOULD be reported alongside it to provide a complete picture of SUT performance. They are not components of PES and MUST NOT be conflated with it.
 
-### 7.1 Detection Rate
+### 7.1 Detection Rate (superseded)
 
-```
-Detection Rate = ((Blocked + Observed) / (Blocked + Missed + Observed)) × 100
-```
-
-Measures the SUT's ability to identify adversarial actions regardless of whether it contained them. IRRELEVANT cases are excluded.
+Earlier versions defined a supplementary Detection Rate. Detection is now a PES component: use the Detection Score defined in Section 4, which counts every in-scope case with `detected: true`, including MISSED cases the SUT detected but failed to contain. Implementations MUST NOT publish a separate Detection Rate.
 
 ### 7.2 False Positive Rate (FPR)
 
@@ -294,7 +290,7 @@ Measures what fraction of total cases were applicable to the SUT. A low coverage
 
 ### 7.4 Supplementary Metric Declaration
 
-Supplementary metrics MUST be clearly labeled and MUST NOT be presented in a way that could be confused with PES. A vendor reporting Detection Rate alongside PES MUST label each metric distinctly.
+Supplementary metrics MUST be clearly labeled and MUST NOT be presented in a way that could be confused with PES. A vendor reporting False Positive Rate or Coverage Rate alongside PES MUST label each metric distinctly.
 
 ---
 
@@ -331,15 +327,16 @@ A proof chain MUST include a PES Summary Record as its penultimate record before
 ```
 {
   "record_type": "PES_SUMMARY",
-  "pes_score": "<percentage>",
-  "pes_numerator": "<integer>",
+  "containment_score": "<percentage>",
+  "detection_score": "<percentage>",
+  "containment_numerator": "<integer>",
+  "detection_numerator": "<integer>",
   "pes_denominator": "<integer>",
   "total_cases": "<integer>",
   "blocked_count": "<integer>",
   "missed_count": "<integer>",
   "observed_count": "<integer>",
   "irrelevant_count": "<integer>",
-  "detection_rate": "<percentage>",
   "false_positive_rate": "<percentage or null if not measured>",
   "coverage_rate": "<percentage>",
   "pes_calculated_utc": "<ISO 8601>",
@@ -388,7 +385,7 @@ An implementation conforms to this specification if:
 7. It declares the full case count breakdown and detected count alongside every published score
 8. It records classification and detection in the proof chain at the time of case execution
 9. It includes a PES Summary Record in every proof chain
-10. It does not present Detection Rate or any other supplementary metric as PES
+10. It does not present any supplementary metric as PES
 
 ---
 
@@ -401,7 +398,7 @@ An implementation conforms to this specification if:
 | ProofBundle™ Format Specification (PP-SPEC-003)  | PES Summary Record and case classification records are carried in the ProofBundle™.                                                                                           |
 | ProofRegister™ API Specification (PP-SPEC-004)   | PES scores are queryable via the ProofRegister™ API by campaign ID.                                                                                                           |
 | Agent-to-Agent Proof Protocol™ (PP-SPEC-007)     | PES scores computed during agentic proof runs follow this specification. OBSERVED classification is particularly relevant for agentic detection-without-containment outcomes. |
-| ProofStamp™ Certification Criteria (PP-SPEC-009) | ProofStamp™ certification requires a minimum PES threshold as defined in PP-SPEC-009.                                                                                         |
+| ProofStamp™ Certification Criteria (PP-SPEC-009) | ProofStamp™ certification has no minimum PES threshold. Every certified result is registered regardless of score. See PP-SPEC-009.                                                                                         |
 
 ---
 
