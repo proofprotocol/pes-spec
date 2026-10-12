@@ -5,7 +5,7 @@
 **Document ID:** PP-SPEC-006
 **Version:** 1.1
 **Status:** Published
-**License:** CC BY 4.0
+**License:** Greater Good Commercial License 1.0 (GGL-C-1.0); text CC BY-ND 4.0 under Part S. See LICENSE.md.
 **Maintained by:** Proof Economy™ Standards Alliance (PESA)
 **Repository:** <https://github.com/proofprotocol>
 **Published:** 2026-07-12
@@ -428,5 +428,5 @@ Proof Economy™ Standards Alliance (PESA)
 
 ---
 
-*Copyright 2026 Nebulonium, Inc. dba HACKERverse. Licensed under CC BY 4.0.*
+*Copyright 2026 Nebulonium, Inc. dba HACKERverse. Licensed under the Greater Good Commercial License 1.0 (see LICENSE.md); text CC BY-ND 4.0 under its Part S. Original inventor: Craig Thomas Ellrod (ORCID 0009-0004-1058-7666).
 *ProofStamp™ is a certification mark of Nebulonium, Inc.*
